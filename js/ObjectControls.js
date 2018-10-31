@@ -22,12 +22,19 @@ THREE.ObjectControls = function (camera, domElement, objectToMove) {
 
 	var maxZoom = 2,
 		minZoom = 0.5,
+		minAngle = -0.5
+		maxAngle = 0.5,
 		zoomSpeed = 1,
 		rotationSpeed = 1;
 
 	this.setZoomlevel = function (min, max) {
 		minZoom = min;
         maxZoom = max;
+	};
+
+	this.setAngle = function (min, max) {
+		minAngle = min;
+        maxAngle = max;
 	};
 
 	this.setZoomSpeed = function (speed) {
