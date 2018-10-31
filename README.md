@@ -2,7 +2,7 @@
 three.js-object-controls Control object rotation, scale。
 控制物体的旋转和缩放。  
 适合的场景是物体在坐标原点，绕Y轴左右旋转，绕X轴上下旋转，所以相机必须在Z轴上。
-比较类似orbitcontrols，但是功能更弱。合适演示地球，
+比较类似orbitcontrols，但是功能更弱。合适演示地球。
 ## 使用方法
 
 加载js文件
@@ -22,6 +22,8 @@ var controls = new THREE.ObjectControls(camera, renderer.domElement, myMesh);
 ```
 
 [演示地址](https://scqilin.github.io/three.js-object-controls/index.html)
+
+![avatar](https://github.com/scqilin/three.js-object-controls/blob/master/img/example.jpg)
 
 ### 配置
 
