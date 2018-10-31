@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>ObjectControls</title>
+    <script type="text/javascript" src="./js/three.min.js"></script>
+    <script type="text/javascript" src="./js/WebGL.js"></script>
+    <script type="text/javascript" src="./js/ObjectControls.js"></script>
+    <style type="text/css">
+        body {
+            margin: 0;
+            overflow: hidden
+        }
+    </style>
+</head>
+
+<body>
+<div id="webgl-output"></div>
+<script type="text/javascript">
+    if (WEBGL.isWebGLAvailable() === false) {
+        document.body.appendChild(WEBGL.getWebGLErrorMessage());
+    }
+    function init() {
+        var scene, camera, renderer, light, controls,transControls,cube,cube1;
+        var clock = new THREE.Clock();
+        drawScene();
+
+        function drawScene() {
+            iniScene();
+            iniLight();
+            windowResize();
+            cube = cubeDr(2, 4, -4, 0);
+            var sphere = sphereDr(2.6, 0, 0, 0); 
+            iniPlane();
+            render();
+            transControls =new THREE.ObjectControls(camera, renderer.domElement, sphere);
+
+        }
+
+        //场景
+        function iniScene() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 3000);
+            renderer = new THREE.WebGLRenderer();
+            camera.position.set(0, 0, 20);
+            camera.lookAt(scene.position);
+            renderer.setClearColor(0xffffff);
+            renderer.shadowMap.enabled = true;
+
+            renderer.setSize(window.innerWidth, window.innerHeight);
+
+            scene.add(new THREE.AxesHelper(4));
+            document.getElementById('webgl-output').appendChild(renderer.domElement);
+        }
+
+        //灯光
+        function iniLight() {
+            light = new THREE.AmbientLight(0x333333);
+            scene.add(light);
+
+            light = new THREE.SpotLight(0x888888);
+            light.position.set(0, 40, -30);
+            light.castShadow = true;
+            light.shadow.mapSize.height = 4096;
+            light.shadow.mapSize.width = 4096;
+            scene.add(light);
+
+            light = new THREE.HemisphereLight(0xffffff, 0x444444, 0.6);
+            light.position.set(0, 200, 0);
+            scene.add(light);
+        }
+
+        //地面 和 辅助网格
+        function iniPlane() {
+            var planeGeo = new THREE.PlaneGeometry(20, 20);
+            var planeMat = new THREE.MeshPhongMaterial({color: 0x999999});
+            var plane = new THREE.Mesh(planeGeo, planeMat);
+            plane.receiveShadow = true;
+            plane.position.y = -5;
+            plane.rotation.x = -0.5 * Math.PI;
+            scene.add(plane);
+        }
+
+        //立方体
+        function cubeDr(a, x, y, z) {
+            var cubeGeo = new THREE.BoxGeometry(a, a, a);
+            var cubeMat = new THREE.MeshStandardMaterial({
+                color: 0xfff000 * Math.random(),                
+            });
+            var cube = new THREE.Mesh(cubeGeo, cubeMat);
+            cube.position.set(x, y, z);
+            cube.castShadow = true;
+            scene.add(cube);
+            return cube;
+        }
+
+        //球体
+        function sphereDr(r, x, y, z) {
+            var geometry = new THREE.SphereGeometry(r, 32, 32);
+            var material = new THREE.MeshPhongMaterial({
+                map:new THREE.TextureLoader().load('./img/map.jpg')
+            });
+            mesh = new THREE.Mesh(geometry, material);
+            mesh.position.set(x, y, z);
+            mesh.castShadow = true;
+            scene.add(mesh);
+            return mesh;
+        }
+
+
+        //改变窗口大小
+        function windowResize() {
+            window.addEventListener('resize', onWindowResize, false);
+
+            function onWindowResize() {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            }
+        }
+
+        //渲染动画
+        function render() {
+            var delta = clock.getDelta();
+            requestAnimationFrame(render);
+            renderer.render(scene, camera);
+        }
+
+
+    }
+
+    window.onload = init;
+</script>
+</body>
+
+</html>
